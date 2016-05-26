@@ -1,0 +1,16 @@
+
+program privet;
+
+var tolya : integer;
+    kolya : float;
+    massiv: [0..10];
+
+begin
+    loop
+        kolya := 0;
+        loop
+            tolya := kolya;
+        endloop;
+        massiv[kolya] := 2;
+    endloop;
+end.
