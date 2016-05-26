@@ -32,6 +32,7 @@ class SyntaxAnalyser {
     val constants = Constants()
     val identifiers = HashMap<String, Int?>()
 
+    var errorInLine = -1
     var tokens: ArrayList<Token>
     var identifiersTable: HashMap<String, Int>
     var numbersTable: HashMap<String, Int>
@@ -53,7 +54,7 @@ class SyntaxAnalyser {
         return null
     }
 
-    fun parse(): String {
+    fun parse(): Boolean {
         var pointer = 0
         var address = 0
         var end = false
@@ -64,6 +65,15 @@ class SyntaxAnalyser {
         var block_node: Tree<Int>? = null
         var last_loops = ArrayList<Tree<Int>>()
 
+        var ep = -1
+        for (t in tokens) {
+            ep++
+            if (t.tokenId == -1) {
+                end = true
+                error = true
+                pointer = ep
+            }
+        }
         loop@ while (!end) when (address) {
 
             0 -> {
@@ -366,9 +376,62 @@ class SyntaxAnalyser {
         }
 
         if (error) {
-            return "Error in line " + tokens[pointer].lineNumber
+            errorInLine = tokens[pointer].lineNumber
+            return false
         }
 
-        return "Parse Complete!"
+        return true
     }
+}
+
+infix fun String.mul(t: Int): String = buildString { for (i in 0..t) append(this@mul) }
+
+fun valueKey(map: HashMap<String, Int>, v: Int): String? {
+    for (k in map.keys)
+        if (map[k] == v) return k
+    return null
+}
+
+fun lol(map: HashMap<Char, Int>, v: Int): String? {
+    for (k in map.keys)
+        if (map[k] == v) return k.toString()
+    return null
+}
+
+val consts = Constants()
+
+fun leafStr(id: Int): String {
+    when (id) {
+        -1 -> return "<signal-program>"
+        -2 -> return "<program>"
+        -3 -> return "<block>"
+        -4 -> return "<declarations>"
+        -5 -> return "<variable-declarations>"
+        -6 -> return "<declarations-list>"
+        -7 -> return "<dimension>"
+        -8 -> return "<variable-identifier>"
+        -9 -> return "<variable>"
+        -10 -> return "<statements-list>"
+        -11 -> return "<statement>"
+        -12 -> return "<procedure-identifier>"
+        -13 -> return "<identifier>"
+        -14 -> return "<unsigned-integer>"
+        -15 -> return "<attribute>"
+        -16 -> return "<range>"
+        -17 -> return "<expression>"
+        else -> {
+            if (valueKey(consts.keywordsTable, id) != null)
+                return valueKey(consts.keywordsTable, id) + "($id)"
+            else if (valueKey(consts.twoSymbolDelimiters, id) != null)
+                return valueKey(consts.twoSymbolDelimiters, id) + "($id)"
+            else if (lol(consts.oneSymbolDelimiters, id) != null)
+                return lol(consts.oneSymbolDelimiters, id) + "($id)"
+        }
+    }
+    return "$id"
+}
+
+fun treeInText(node: Tree<Int>, offset: Int): String = buildString {
+    append((" " mul offset) + leafStr(node.data!!) + "\n")
+    if (!node.isLeaf()) node.children.forEach { append(treeInText(it, offset + 13)) }
 }

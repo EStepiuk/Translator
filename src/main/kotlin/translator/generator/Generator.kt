@@ -83,7 +83,7 @@ class Generator(val filename: String,
         }
     }
 
-    fun generateVarList(list_n: Tree <Int>) {
+    private fun generateVarList(list_n: Tree <Int>) {
         val dec_n = list_n[0]
         writeLine(buildString {
             append("    v" + dec_n[0][0][0].data + " ")
@@ -92,8 +92,9 @@ class Generator(val filename: String,
                 constants.keywordsTable["FLOAT"] -> append("dd ?")
                 else -> {
                     append("db ")
-                    //Тут запись длинны
-                    append("dup (?)")
+                    append(findNumber(dec_n[2][1][2][0].data!!).toInt() -
+                            findNumber(dec_n[2][1][0][0].data!!).toInt() + 1)
+                    append(" dup (?)")
                 }
             }
         })

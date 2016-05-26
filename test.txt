@@ -4,8 +4,10 @@ program privet;
 var tolya : integer;
     kolya : float;
     massiv: [0..10];
+    petya: integer;
 
 begin
+    petya := kolya;
     loop
         kolya := 0;
         loop

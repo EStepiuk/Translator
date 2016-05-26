@@ -118,6 +118,12 @@ class TokenAnalyser{
     }
 
     fun analyse(dataReceiver: DataReceiver) {
+        identifiersTable.clear()
+        numbersTable.clear()
+        lastIdentifierCode = 1000
+        lastNumbersCode = 700
+        commentFlag = false
+        tokenArray.clear()
         dataReceiver.open()
         var str: String? = dataReceiver.bufferedReader!!.readLine()
         var line = 1

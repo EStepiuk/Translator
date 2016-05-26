@@ -48,14 +48,14 @@ fun printTree(node: Tree<Int>, branch_l: Int) {
 }
 
 fun main(args: Array<String>) {
-//    Application.launch(MyApp::class.java, *args)
-    val ta = TokenAnalyser()
-    val data_receiver = DataReceiver()
-    data_receiver.fileName = "/home/dnt/IdeaProjects/1/test.txt"
-    ta.analyse(data_receiver)
-    val sa = SyntaxAnalyser(ta.tokenArray, ta.identifiersTable, ta.numbersTable)
-    println(sa.parse() + "\n")
-    printTree(sa.tree, 3)
-    val gen = Generator(data_receiver.fileName, sa.tree, ta.identifiersTable, ta.numbersTable)
-    gen.generate()
+    Application.launch(MyApp::class.java, *args)
+//    val ta = TokenAnalyser()
+//    val data_receiver = DataReceiver()
+//    data_receiver.fileName = "/home/dnt/IdeaProjects/1/test.txt"
+//    ta.analyse(data_receiver)
+//    val sa = SyntaxAnalyser(ta.tokenArray, ta.identifiersTable, ta.numbersTable)
+//    println(sa.parse() + "\n")
+//    printTree(sa.tree, 3)
+//    val gen = Generator(data_receiver.fileName, sa.tree, ta.identifiersTable, ta.numbersTable)
+//    gen.generate()
 }
